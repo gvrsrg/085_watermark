@@ -1,5 +1,6 @@
 import tkinter
 from tkinter import filedialog as fd
+from PIL import Image
 
 
 
@@ -11,7 +12,17 @@ def main():
 
     def select_file():
         file = fd.askopenfile(mode='r')
-        input.config(text=file.name)
+        python_image = tkinter.PhotoImage(file=file.name)
+        image_field.create_image(0, 0, image=python_image)
+        image_field.update()
+        '''
+        input.insert(0, file.name)
+        input.config(width=len(file.name))
+        input.winfo_screenwidth()
+        input.update()
+        with Image.open(file.name) as im:
+            im.rotate(45).show()
+        '''
 
     window = tkinter.Tk()
     window.title("Watermarking")
@@ -30,6 +41,9 @@ def main():
 
     input = tkinter.Entry()
     input.pack()
+
+    image_field = tkinter.Canvas()
+    image_field.pack()
 
     window.mainloop()
 
