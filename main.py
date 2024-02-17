@@ -1,53 +1,72 @@
 import tkinter
 from tkinter import filedialog as fd
-from PIL import Image
+from PIL import Image, ImageTk, ImageDraw, ImageFont
 
 
 
 
-def main():
-    def add_watermark():
+class App:
+    def __init__(self):
+        def add_watermark():
 
-        label1.config(text=input.get())
+            self.label1.config(text=self.input.get())
+            self.draw = ImageDraw.Draw(self.image)
+            w, h = self.image.size
+            x, y = int(w / 2), int(h / 2)
+            if x > y:
+                font_size = y
+            elif y > x:
+                font_size = x
+            else:
+                font_size = x
 
-    def select_file():
-        file = fd.askopenfile(mode='r')
-        python_image = tkinter.PhotoImage(file=file.name)
-        image_field.create_image(0, 0, image=python_image)
-        image_field.update()
-        '''
-        input.insert(0, file.name)
-        input.config(width=len(file.name))
-        input.winfo_screenwidth()
-        input.update()
-        with Image.open(file.name) as im:
-            im.rotate(45).show()
-        '''
+            font = ImageFont.truetype("arial.ttf", int(font_size / 6))
+            self.draw.text((x, y), self.input.get(), fill=(128, 128, 128), font=font, anchor='ms')
+            self.photo = ImageTk.PhotoImage(self.image)
 
-    window = tkinter.Tk()
-    window.title("Watermarking")
-
+            self.image_field.create_image(0, 0, anchor='nw', image=self.photo)
 
 
-    label1 = tkinter.Label(text="label 1")
-    label1.pack()
-    click_count = 0
+        def select_file():
 
-    button = tkinter.Button(text="Add watermark", command=add_watermark)
-    button.pack()
+            self.file = fd.askopenfile(mode='r')
+            self.image = Image.open(self.file.name)
+            self.photo = ImageTk.PhotoImage(self.image)
 
-    file_button = tkinter.Button(text="Select file", command=select_file)
-    file_button.pack()
+            self.image_field.create_image(0, 0, anchor='nw', image=self.photo)
 
-    input = tkinter.Entry()
-    input.pack()
+        def save_file():
+            self.wm_file = fd.asksaveasfile()
+            self.image.save(self.wm_file.name)
 
-    image_field = tkinter.Canvas()
-    image_field.pack()
+        self.window = tkinter.Tk()
+        self.window.title("Watermarking")
 
-    window.mainloop()
+
+
+        self.label1 = tkinter.Label(text="label 1")
+        self.label1.pack()
+        click_count = 0
+
+        self.button = tkinter.Button(text="Add watermark", command=add_watermark)
+        self.button.pack()
+
+        self.file_button = tkinter.Button(text="Select file", command=select_file)
+        self.file_button.pack()
+
+        self.save_button = tkinter.Button(text="Save file", command=save_file)
+        self.save_button.pack()
+
+        self.input = tkinter.Entry()
+        self.input.pack()
+
+        self.image_field = tkinter.Canvas()
+        self.image_field.pack()
+
+        self.window.mainloop()
+
+
 
 if __name__ == "__main__":
-    main()
-
+    app = App()
 
