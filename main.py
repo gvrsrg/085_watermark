@@ -2,9 +2,6 @@ import tkinter
 from tkinter import filedialog as fd
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 
-
-
-
 class App:
     def __init__(self):
         def add_watermark():
@@ -12,7 +9,7 @@ class App:
             self.label1.config(text=self.input.get())
             self.draw = ImageDraw.Draw(self.image)
             w, h = self.image.size
-            x, y = int(w / 2), int(h / 2)
+            x, y = int(w / 2), int(h / 4)
             if x > y:
                 font_size = y
             elif y > x:
@@ -23,16 +20,13 @@ class App:
             font = ImageFont.truetype("arial.ttf", int(font_size / 6))
             self.draw.text((x, y), self.input.get(), fill=(128, 128, 128), font=font, anchor='ms')
             self.photo = ImageTk.PhotoImage(self.image)
-
             self.image_field.create_image(0, 0, anchor='nw', image=self.photo)
-
 
         def select_file():
 
             self.file = fd.askopenfile(mode='r')
             self.image = Image.open(self.file.name)
             self.photo = ImageTk.PhotoImage(self.image)
-
             self.image_field.create_image(0, 0, anchor='nw', image=self.photo)
 
         def save_file():
@@ -42,11 +36,8 @@ class App:
         self.window = tkinter.Tk()
         self.window.title("Watermarking")
 
-
-
         self.label1 = tkinter.Label(text="label 1")
         self.label1.pack()
-        click_count = 0
 
         self.button = tkinter.Button(text="Add watermark", command=add_watermark)
         self.button.pack()
@@ -64,7 +55,6 @@ class App:
         self.image_field.pack()
 
         self.window.mainloop()
-
 
 
 if __name__ == "__main__":
